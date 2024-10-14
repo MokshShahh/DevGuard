@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "DevGaurd",
+  "description": "idek what this does",
+  "version": "1.0",
+  "content_scripts": [
+    {
+      "js": ["scripts/content.js"],
+      "matches": [
+        "https://developer.chrome.com/docs/extensions/*",
+        "https://developer.chrome.com/docs/webstore/*"
+      ]
+    }
+  ]
+}
