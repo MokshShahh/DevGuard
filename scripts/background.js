@@ -124,8 +124,7 @@ async function runOncePerDay(callback) {
             console.log("Function already ran today.");
             return;
         }
-
-        // If not, run the function and update the timestamp
+        //call the fucntion if it has not ran today
         callback();
 
         // Store the current date as the last run date
