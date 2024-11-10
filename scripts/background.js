@@ -42,15 +42,31 @@ async function fetchDailyProblem() {
             console.error("Error fetching daily problem:", data.errors);
             return null;
         }
-        return data.data.activeDailyCodingChallengeQuestion.link;
+        return data.data.activeDailyCodingChallengeQuestion;
     } catch (error) {
         console.error("Network error:", error);
         return null;
     }
 }
 
+async function fetchAcsubmissions(username) {
+    let solvedProblems= await fetch("https://alfa-leetcode-api.onrender.com/Arnav_58/acsubmission")
+    
+    let submission = await solvedProblems.json()
+    submission=submission.submission
+    let url = await fetchDailyProblem();
+    url=url.question.titleslug
+    for(let i=0;i<20;i++){
+        if(submission[i].titleslug==url){
+            return true
+        }
+    }
+    
+}
+
 async function updateRedirectRule() {
-    const url = await fetchDailyProblem();
+    let url = await fetchDailyProblem();
+    url=url.link
     if (url) {
         const redirectUrl = 'https://leetcode.com' + url;
         let redirectRule = {
@@ -67,13 +83,12 @@ async function updateRedirectRule() {
         };
 
         try {
-            // First, remove the existing rule
-            // await chrome.declarativeNetRequest.updateDynamicRules({
-            //     removeRuleIds: [100] // Ensure this ID corresponds to an existing rule
-            // });
-            // console.log("Rule ID 100 removed successfully.");
+            await chrome.declarativeNetRequest.updateDynamicRules({
+                removeRuleIds: [200] // Ensure this ID corresponds to an existing rule
+            });
+            
 
-            // Now add the new redirect rule
+            //Now add the new redirect rule
             await chrome.declarativeNetRequest.updateDynamicRules({
                 addRules: [redirectRule]
             });
@@ -96,8 +111,44 @@ async function logAllRules() {
     }
 }
 
+// Call the function to update the redirect rule
+async function runOncePerDay(callback) {
+    const today = new Date().toISOString().split('T')[0]; // Get the current date (YYYY-MM-DD)
+
+    // Retrieve the last run date from Chrome storage
+    chrome.storage.local.get(['lastRunDate'], (result) => {
+        const lastRunDate = result.lastRunDate;
+
+        // Check if the function has already run today
+        if (lastRunDate === today) {
+            console.log("Function already ran today.");
+            return;
+        }
+
+        // If not, run the function and update the timestamp
+        callback();
+
+        // Store the current date as the last run date
+        chrome.storage.local.set({ lastRunDate: today }, () => {
+            console.log("Function executed, and timestamp updated:", today);
+        });
+    });
+}
+
+async function checker(){
+    if(fetchAcsubmissions("ji")){
+        await chrome.declarativeNetRequest.updateDynamicRules({
+            removeRuleIds: [200] // Ensure this ID corresponds to an existing rule
+        });
+        console.log("removed rule coz solved")
+    }
+}
 // Call the function to log all current dynamic rules
 logAllRules();
+chrome.tabs.onCreated.addListener((tab) => {
+    checker()
+    runOncePerDay(updateRedirectRule)
+    console.log("checker ran")
+});
 
-// Call the function to update the redirect rule
-updateRedirectRule().catch(error => console.error("Error in updateRedirectRule:", error));
+
