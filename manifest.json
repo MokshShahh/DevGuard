@@ -9,12 +9,9 @@
   "host_permissions": [
     "<all_urls>"
   ],
-  "content_scripts":[{
-    "matches":["https://leetcode.com/problemset/*"],
-    "js":["scripts/content.js"]
-
-  }],
-  
+  "action":{
+    "default_popup" : "frontend/index.html"
+  },
   "background": {
     "service_worker": "scripts/background.js" 
   }

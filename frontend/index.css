@@ -1,0 +1,10 @@
+.container{
+    width: 300px;
+    height: 200px;
+    background-color: brown;
+}
+.element{
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
