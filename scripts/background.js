@@ -65,12 +65,7 @@ async function addRedirectRule(url){
 
 // Function to log all current dynamic rules
 async function logAllRules() {
-    try {
-        const rules = await chrome.declarativeNetRequest.getDynamicRules();
-        console.log("Current dynamic rules:", rules);
-    } catch (error) {
-        console.error("Error retrieving dynamic rules:", error);
-    }
+    return await chrome.declarativeNetRequest.getDynamicRules()
 }
 
 async function runOncePerDay(callback) {
@@ -115,9 +110,16 @@ chrome.tabs.onCreated.addListener(async (tab) => {
     else{
         console.log("not gonna run daily")
     }
+    allRules = logAllRules()
     
-    await checker()
-    console.log("checker ran")
+    if(allRules.length>0){
+        console.log("not solved and rule exists so checker ran")
+        console.log(test)
+        await checker()
+    }
+    else{
+        console.log("probem aldredy solved for today")
+    }
 });
 
 
