@@ -165,7 +165,35 @@ async function getProblemFromStorage() {
     });
 }
 
+//runs everythign on start of chrome once
+chrome.runtime.onStartup.addListener(async function() {
+    dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
+    console.log("dailt problem",dailyProblem)
+    if(dailyProblem){
+        setProblemInStorage(dailyProblem)
+        
+    }
+    else{
+        console.log("not gonna run daily")
+    }
+    await runOncePerDay(addRedirectRule,"addRedirectRule")
+    allRules = await logAllRules()
+    let problem = await getProblemFromStorage()
+    console.log(problem)
+    console.log(allRules)
+    console.log(allRules.length)
+    if(allRules.length>0){
+        console.log("not solved and rule exists so checker ran")
+        await checker()
+    }
+    else{
+        console.log("probem aldredy solved for today")
+    }
+    
+  })
 
+
+  //runs evrything on each new tab created
 chrome.tabs.onCreated.addListener(async (tab) => {
     
     dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
