@@ -40,6 +40,7 @@ async function removeRedirectRule() {
 
 
 async function addRedirectRule(){
+    removeRedirectRule()
     let url = await getProblemFromStorage()
     url=url.questionLink
     if (url) {
