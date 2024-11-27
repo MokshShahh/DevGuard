@@ -46,7 +46,7 @@ async function addRedirectRule(){
     if (url) {
         const redirectUrl = url;
         let redirectRule = {
-            "id": 200, // Use a unique ID for the new rule
+            "id": 200, // Use a unique ID for this particular redirect rule so everytime u need to delete leetcode rule u delete rule with ID 200
             "priority": 1,
             "action": {
                 "type": "redirect",
