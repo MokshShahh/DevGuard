@@ -1,7 +1,7 @@
 .container{
     width: 300px;
     height: 200px;
-    background-color: brown;
+    background-color: rgb(42, 155, 165);
 }
 .element{
     align-content: center;
