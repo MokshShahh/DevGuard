@@ -6,9 +6,10 @@ async function fetchDailyProblem() {
 }
 
 
-async function fetchAcsubmissions(username) {
-    let url = await getProblemFromStorage()
-    let solvedProblems= await fetch("https://alfa-leetcode-api.onrender.com/MokshShahh/acsubmission")  
+async function fetchAcsubmissions() {
+    let url = await getFromStorage("problem")
+    let username = await getFromStorage("username")
+    let solvedProblems= await fetch(`https://alfa-leetcode-api.onrender.com/`+username+`/acsubmission`)  
     console.log("api called for all submissions") 
     let submission = await solvedProblems.json()
     submission=submission.submission
@@ -41,7 +42,7 @@ async function removeRedirectRule() {
 
 async function addRedirectRule(){
     removeRedirectRule()
-    let url = await getProblemFromStorage()
+    let url = await getFromStorage("probem")
     url=url.questionLink
     if (url) {
         const redirectUrl = url;
@@ -67,10 +68,35 @@ async function addRedirectRule(){
 }
 
 
-// Function to log all current dynamic rules
-async function logAllRules() {
+// Function that returns all current dynamic rules
+async function allDynamicRules() {
     return await chrome.declarativeNetRequest.getDynamicRules()
 }
+
+// Helper to promisify chrome.storage.local.set
+export const setInStorage = (key,data) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.set({[key]:data}, () => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError);
+            }
+            resolve();
+        });
+    });
+};
+
+
+// Helper to promisify chrome.storage.local.get
+export const getFromStorage = (key) => {
+    return new Promise((resolve, reject) => {
+        chrome.storage.local.get([key], (result) => {
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError);
+            }
+            resolve(result[key]);
+        });
+    });
+};
 
 
 async function runOncePerDay(callback,storageKey) {
@@ -81,30 +107,6 @@ async function runOncePerDay(callback,storageKey) {
     const today = new Date();
     const todayTime = today.getTime(); // Convert today's time to epoch time (milliseconds)
     console.log("todayTime", todayTime);
-
-    // Helper to promisify chrome.storage.local.get
-    const getFromStorage = (key) => {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.get([key], (result) => {
-                if (chrome.runtime.lastError) {
-                    return reject(chrome.runtime.lastError);
-                }
-                resolve(result[key]);
-            });
-        });
-    };
-
-    // Helper to promisify chrome.storage.local.set
-    const setInStorage = (key,data) => {
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.set({[key]:data}, () => {
-                if (chrome.runtime.lastError) {
-                    return reject(chrome.runtime.lastError);
-                }
-                resolve();
-            });
-        });
-    };
 
     try {
         // Get the last run date from storage
@@ -134,7 +136,7 @@ async function runOncePerDay(callback,storageKey) {
 
 
 async function checker(){
-    problem = await getProblemFromStorage()
+    problem = await getFromStorage("probem")
     removeRedirectRule()
     let isSolved = await fetchAcsubmissions("Ji",problem)
     if(!isSolved){
@@ -142,44 +144,27 @@ async function checker(){
     }
 }
 
-// Update problem in chrome.storage.local
-async function setProblemInStorage(problem) {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.set({ 'problem': problem }, () => {
-            if (chrome.runtime.lastError) {
-                return reject(chrome.runtime.lastError);
-            }
-            resolve();
-        });
-    });
-}
 
-//retrieve probllem from storage
-async function getProblemFromStorage() {
-    return new Promise((resolve, reject) => {
-        chrome.storage.local.get('problem', (result) => {
-            if (chrome.runtime.lastError) {
-                return reject(chrome.runtime.lastError);
-            }
-            resolve(result.problem);
-        });
-    });
-}
 
 //runs everythign on start of chrome once
 chrome.runtime.onStartup.addListener(async function() {
+    //setting popup to be streak.html if username has been entered or default popup
+    const popUpPath= await getFromStorage("popUpPath")
+    if (popUpPath){
+        chrome.action.setPopup({ popup: popUpPath });
+    }
     dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
     console.log("dailt problem",dailyProblem)
     if(dailyProblem){
-        setProblemInStorage(dailyProblem)
+        setInStorage("problem",dailyProblem)
         
     }
     else{
         console.log("not gonna run daily")
     }
     await runOncePerDay(addRedirectRule,"addRedirectRule")
-    allRules = await logAllRules()
-    let problem = await getProblemFromStorage()
+    allRules = await allDynamicRules()
+    let problem = await getFromStorage("problem")
     console.log(problem)
     console.log(allRules)
     console.log(allRules.length)
@@ -195,20 +180,20 @@ chrome.runtime.onStartup.addListener(async function() {
 
 
   //runs evrything on each new tab created
-chrome.tabs.onCreated.addListener(async (tab) => {
+chrome.tabs.onCreated.addListener(async () => {
     
-    dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
+    let dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
     console.log("dailt problem",dailyProblem)
     if(dailyProblem){
-        setProblemInStorage(dailyProblem)
+        setInStorage("problem",dailyProblem)
         
     }
     else{
         console.log("not gonna run daily")
     }
     await runOncePerDay(addRedirectRule,"addRedirectRule")
-    allRules = await logAllRules()
-    let problem = await getProblemFromStorage()
+    let allRules = await allDynamicRules()
+    let problem = await getFromStorage("problem")
     console.log(problem)
     console.log(allRules)
     console.log(allRules.length)
@@ -220,5 +205,4 @@ chrome.tabs.onCreated.addListener(async (tab) => {
         console.log("probem aldredy solved for today")
     }
 });
-
 
