@@ -217,3 +217,13 @@ chrome.tabs.onCreated.addListener(async () => {
     }
 });
 
+
+//prompts user to enter leetcode username
+chrome.runtime.onInstalled.addListener(function (details) {
+    if (details.reason == "install") {
+        chrome.action.openPopup()
+    } else if(details.reason == "update") {
+        // perform some logic
+    }
+});
+
