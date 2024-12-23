@@ -9,6 +9,7 @@ async function fetchDailyProblem() {
 async function fetchAcsubmissions() {
     let url = await getFromStorage("problem")
     let username = await getFromStorage("username")
+    console.log(username)
     let solvedProblems= await fetch(`https://alfa-leetcode-api.onrender.com/`+username+`/acsubmission`)  
     console.log("api called for all submissions") 
     let submission = await solvedProblems.json()
@@ -19,6 +20,9 @@ async function fetchAcsubmissions() {
     for(let i=0;i<20;i++){
         if(submission[i].titleSlug==url){
             console.log("solved")
+            //updating total solved problems
+            let total = await getFromStorage("totalProblems")
+            await setInStorage("totalProblmes",total+1)
             return true
         }
     }
@@ -42,7 +46,9 @@ async function removeRedirectRule() {
 
 async function addRedirectRule(){
     removeRedirectRule()
-    let url = await getFromStorage("probem")
+    let url = await getFromStorage("problem")
+    console.log("this is the url in addredirectrule")
+    console.log(url)
     url=url.questionLink
     if (url) {
         const redirectUrl = url;
@@ -129,14 +135,14 @@ async function runOncePerDay(callback,storageKey) {
         console.log("Function executed, and timestamp updated:", todayTime);
         return await callback();
     } catch (error) {
-        console.error("Error in runOncePerDay:", error);
+        console.error("Error in runOncePerDay:", error, callback);
         return null;
     }
 }
 
 
 async function checker(){
-    problem = await getFromStorage("probem")
+    let problem = await getFromStorage("probem")
     removeRedirectRule()
     let isSolved = await fetchAcsubmissions("Ji",problem)
     if(!isSolved){
@@ -153,7 +159,7 @@ chrome.runtime.onStartup.addListener(async function() {
     if (popUpPath){
         chrome.action.setPopup({ popup: popUpPath });
     }
-    dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
+    let dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
     console.log("dailt problem",dailyProblem)
     if(dailyProblem){
         setInStorage("problem",dailyProblem)
@@ -179,7 +185,7 @@ chrome.runtime.onStartup.addListener(async function() {
   })
 
 
-  //runs evrything on each new tab created
+//runs evrything on each new tab created
 chrome.tabs.onCreated.addListener(async () => {
     
     let dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
@@ -203,6 +209,11 @@ chrome.tabs.onCreated.addListener(async () => {
     }
     else{
         console.log("probem aldredy solved for today")
+    }
+    //setting popup to be the new one
+    const popUpPath= await getFromStorage("popUpPath")
+    if (popUpPath){
+        chrome.action.setPopup({ popup: popUpPath });
     }
 });
 
