@@ -21,8 +21,7 @@ async function fetchAcsubmissions() {
         if(submission[i].titleSlug==url){
             console.log("solved")
             //updating total solved problems
-            let total = await getFromStorage("totalProblems")
-            await setInStorage("totalProblmes",total+1)
+            runOncePerDay(updateTotalProblems,'updateTotalProblems')
             return true
         }
     }
@@ -45,7 +44,7 @@ async function removeRedirectRule() {
 
 
 async function addRedirectRule(){
-    removeRedirectRule()
+    await removeRedirectRule()
     let url = await getFromStorage("problem")
     console.log("this is the url in addredirectrule")
     console.log(url)
@@ -130,16 +129,25 @@ async function runOncePerDay(callback,storageKey) {
             }
         }
 
-        // Update the last run date and execute the callback
-        await setInStorage( localStorageKey, todayTime );
-        console.log("Function executed, and timestamp updated:", todayTime);
-        return await callback();
+        // Execute the callback
+        const callbackResult = await callback();
+
+        // Update the last run date in storage only if the callback was successful
+        await setInStorage(localStorageKey, todayTime);
+        console.log("Function executed successfully, and timestamp updated:", todayTime);
+
+        return callbackResult; // Return the callback's result
     } catch (error) {
         console.error("Error in runOncePerDay:", error, callback);
         return null;
     }
 }
 
+
+async function updateTotalProblems(){
+    let total = await getFromStorage("totalProblems")
+    await setInStorage("totalProblems",total+1)
+}
 
 async function checker(){
     let problem = await getFromStorage("probem")
@@ -169,7 +177,7 @@ chrome.runtime.onStartup.addListener(async function() {
         console.log("not gonna run daily")
     }
     await runOncePerDay(addRedirectRule,"addRedirectRule")
-    allRules = await allDynamicRules()
+    let allRules = await allDynamicRules()
     let problem = await getFromStorage("problem")
     console.log(problem)
     console.log(allRules)
