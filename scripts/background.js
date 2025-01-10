@@ -40,11 +40,13 @@ async function removeRedirectRule() {
         catch(error){
             console.log(error)
         }
+        console.log(await allDynamicRules())
 }
 
 
 async function addRedirectRule(){
     await removeRedirectRule()
+    await new Promise((resolve) => setTimeout(resolve, 300)); // 100ms delay coz chromes api is slow
     let url = await getFromStorage("problem")
     console.log("this is the url in addredirectrule")
     console.log(url)
@@ -150,9 +152,8 @@ async function updateTotalProblems(){
 }
 
 async function checker(){
-    let problem = await getFromStorage("probem")
     removeRedirectRule()
-    let isSolved = await fetchAcsubmissions("Ji",problem)
+    let isSolved = await fetchAcsubmissions()
     if(!isSolved){
         addRedirectRule()
     }
