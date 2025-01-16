@@ -10,7 +10,13 @@ async function fetchAcsubmissions() {
     let url = await getFromStorage("problem")
     let username = await getFromStorage("username")
     console.log(username)
-    let solvedProblems= await fetch(`https://alfa-leetcode-api.onrender.com/`+username+`/acsubmission`)  
+    let solvedProblems = await fetch(`https://alfa-leetcode-api.onrender.com/${username}/acsubmission`, {
+        method: 'GET',
+        headers: {
+            'Cache-Control': 'no-cache', // Prevents browser from using cached data
+            'Pragma': 'no-cache'         // Fallback for older HTTP versions
+        }
+    });      
     console.log("api called for all submissions") 
     let submission = await solvedProblems.json()
     submission=submission.submission
@@ -32,21 +38,28 @@ async function fetchAcsubmissions() {
 
 
 async function removeRedirectRule() {
+    let rules = await allDynamicRules()
+    if (rules.length>0){
         try {
             await chrome.declarativeNetRequest.updateDynamicRules({
                 removeRuleIds: [200] // Ensure this ID corresponds to an existing rule
             });
+            console.log("removed rule")
         }
         catch(error){
             console.log(error)
         }
-        console.log(await allDynamicRules())
-}
+    }
+    }
+
 
 
 async function addRedirectRule(){
+    console.log("tryna remove rule")
     await removeRedirectRule()
-    await new Promise((resolve) => setTimeout(resolve, 300)); // 100ms delay coz chromes api is slow
+
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 100ms delay coz chromes api is slow
+    console.log("after delay")
     let url = await getFromStorage("problem")
     console.log("this is the url in addredirectrule")
     console.log(url)
@@ -126,7 +139,7 @@ async function runOncePerDay(callback,storageKey) {
         if (lastRunDate) {
             const lastRunDateTime = new Date(lastRunDate).getTime(); // Convert lastRunDate to epoch time (milliseconds)
             if (lastRunDateTime > cutoffTime) {
-                console.log("Function already ran today after cutoff.");
+                console.log("Function already ran today after cutoff." +storageKey);
                 return null; // Skip the callback
             }
         }
@@ -152,54 +165,22 @@ async function updateTotalProblems(){
 }
 
 async function checker(){
-    removeRedirectRule()
     let isSolved = await fetchAcsubmissions()
-    if(!isSolved){
-        addRedirectRule()
+    if(isSolved){
+        await removeRedirectRule()
     }
 }
 
-
-
-//runs everythign on start of chrome once
-chrome.runtime.onStartup.addListener(async function() {
-    //setting popup to be streak.html if username has been entered or default popup
-    const popUpPath= await getFromStorage("popUpPath")
-    if (popUpPath){
-        chrome.action.setPopup({ popup: popUpPath });
-    }
-    let dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
-    console.log("dailt problem",dailyProblem)
-    if(dailyProblem){
-        setInStorage("problem",dailyProblem)
-        
-    }
-    else{
-        console.log("not gonna run daily")
-    }
-    await runOncePerDay(addRedirectRule,"addRedirectRule")
-    let allRules = await allDynamicRules()
-    let problem = await getFromStorage("problem")
-    console.log(problem)
-    console.log(allRules)
-    console.log(allRules.length)
-    if(allRules.length>0){
-        console.log("not solved and rule exists so checker ran")
-        await checker()
-    }
-    else{
-        console.log("probem aldredy solved for today")
-    }
-    
-  })
-
-
 //runs evrything on each new tab created
 chrome.tabs.onCreated.addListener(async () => {
-    
+    console.log("on tab")
+
+    await addRedirectRule()
+    await addRedirectRule()    
     let dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
     console.log("dailt problem",dailyProblem)
     if(dailyProblem){
+        await removeRedirectRule()
         setInStorage("problem",dailyProblem)
         
     }
