@@ -174,9 +174,6 @@ async function checker(){
 //runs evrything on each new tab created
 chrome.tabs.onCreated.addListener(async () => {
     console.log("on tab")
-
-    await addRedirectRule()
-    await addRedirectRule()    
     let dailyProblem=await runOncePerDay(fetchDailyProblem,"fetchDailyProblem")
     console.log("dailt problem",dailyProblem)
     if(dailyProblem){
