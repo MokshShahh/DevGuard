@@ -1,12 +1,21 @@
 async function fetchDailyProblem() {
+    try{
     let dailyProblem= await fetch("https://alfa-leetcode-api.onrender.com/Daily")
     console.log("api called for daily") 
     let problem = await dailyProblem.json()
-    return problem   
+    return problem  
+    }
+    catch(error){
+        const popUpPath= "./frontend/error.html"
+        chrome.action.setPopup({ popup: popUpPath });
+        chrome.action.openPopup()
+    }
+     
 }
 
 
 async function fetchAcsubmissions() {
+    try{
     let url = await getFromStorage("problem")
     let username = await getFromStorage("username")
     console.log(username)
@@ -33,6 +42,12 @@ async function fetchAcsubmissions() {
     }
     console.log("not solved")
     return false
+}
+catch(error){
+    const popUpPath= "./frontend/error.html"
+    chrome.action.setPopup({ popup: popUpPath });
+    chrome.action.openPopup()
+}
     
 }
 
