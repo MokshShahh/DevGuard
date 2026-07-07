@@ -1,0 +1,270 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Spotlight } from '../components/Spotlight';
+import BentoGrid from '../components/BentoGrid.astro';
+import BentoGridItem from '../components/BentoGridItem.astro';
+import { InteractiveHowItWorks } from '../components/InteractiveHowItWorks';
+import { Shield, Sparkles, Terminal, Code, Flame, ArrowRight, Lock } from 'lucide-react';
+import { ChromeIcon as Chrome, GithubIcon as Github } from '../components/icons';
+---
+
+<Layout title="DevGuard — Stop browsing, start solving.">
+  <div class="relative min-h-screen w-full bg-brand-black overflow-hidden select-none">
+    
+    <Spotlight className="-top-40 left-0 md:left-60 md:-top-20" fill="rgba(34, 197, 94, 0.15)" client:load />
+    <Spotlight className="top-1/3 right-10" fill="rgba(255, 161, 22, 0.08)" client:load />
+
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#0f0f0f_1px,transparent_1px),linear-gradient(to_bottom,#0f0f0f_1px,transparent_1px)] bg-size-[4rem_4rem] [mask-image-radial-gradient[(ellipse_60%_50%_at_50%_40%,#000_70%,transparent_100%)] pointer-events-none" />
+
+    <header class="sticky top-0 z-50 w-full border-b border-neutral-900 bg-brand-black/70 backdrop-blur-md">
+      <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <a href="#" class="flex items-center space-x-2 group">
+          <img src="/images/icon32.png" alt="DevGuard Logo" class="h-8 w-8 rounded-lg" />
+          <span class="font-mono text-lg font-bold tracking-tight text-neutral-100">
+            Dev<span class="text-brand-green">Guard</span>
+          </span>
+        </a>
+
+        <nav class="hidden md:flex items-center space-x-8 font-mono text-xs font-medium text-neutral-400">
+          <a href="#features" class="hover:text-brand-green transition-colors">Features</a>
+          <a href="#how-it-works" class="hover:text-brand-green transition-colors">How It Works</a>
+          <a href="#installation" class="hover:text-brand-green transition-colors">Installation</a>
+        </nav>
+
+        <div class="flex items-center space-x-4">
+          <a 
+            href="https://github.com/MokshShahh/DevGuard" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="text-neutral-400 hover:text-neutral-200 transition-colors"
+          >
+            <Github className="h-4.5 w-4.5" />
+          </a>
+          <!-- PLACEHOLDER: replace with real Chrome Web Store link -->
+          <a 
+            href="https://chromewebstore.google.com/detail/devgaurd/mljdkehdeebblhhkghiigpaahgelkeog" 
+            id="chrome-store-nav-btn"
+            class="hidden sm:inline-flex items-center space-x-1.5 rounded-lg bg-brand-green hover:bg-brand-green-glow text-black font-mono text-xs font-semibold px-4 py-2 transition-all"
+          >
+            <Chrome className="h-3.5 w-3.5" />
+            <span>Install Extension</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 px-6">
+
+      <!-- Hero Section -->
+      <section class="mx-auto max-w-7xl pt-24 pb-20 md:pt-32 md:pb-28 text-center relative">
+        <div class="space-y-6 max-w-3xl mx-auto">
+          <!-- Main Title -->
+          <h1 class="font-mono text-4xl font-extrabold tracking-tight text-neutral-100 sm:text-5xl md:text-6xl uppercase">
+            DevGuard<br/>
+            <span class="text-transparent bg-clip-text bg-linear-to-r from-brand-green to-emerald-400">
+              Stop browsing,<br class="hidden sm:block" /> start solving.
+            </span>
+          </h1>
+
+          <!-- Description -->
+          <p class="font-sans text-neutral-400 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+            A commitment tool for developers. DevGuard locks down web traffic on your browser and redirects you to the daily LeetCode challenge, lifting the block only after you successfully solve it.
+          </p>
+
+          <!-- Buttons -->
+          <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
+            <!-- PLACEHOLDER: replace with real Chrome Web Store link -->
+            <a 
+              href="https://chromewebstore.google.com/detail/devgaurd/mljdkehdeebblhhkghiigpaahgelkeog" 
+              class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-xl bg-brand-green hover:bg-brand-green-glow text-black font-mono text-sm font-bold px-6 py-3.5 transition-all shadow-[0_0_25px_-5px_rgba(34,197,94,0.3)]"
+            >
+              <Chrome className="h-4.5 w-4.5" />
+              <span>Add to Chrome (Free)</span>
+            </a>
+            
+            <a 
+              href="#how-it-works" 
+              class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 rounded-xl border border-neutral-850 hover:border-neutral-700 bg-brand-dark/20 text-neutral-300 font-mono text-sm font-semibold px-6 py-3.5 transition-colors"
+            >
+              <span>See How it Works</span>
+              <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </div>
+
+        <!-- Extension Mockup Frame -->
+        <div class="mt-16 md:mt-24 max-w-4xl mx-auto border border-neutral-850 rounded-2xl overflow-hidden bg-brand-dark/30 shadow-[0_0_50px_rgba(0,0,0,0.8)] relative group">
+          <div class="absolute inset-0 bg-linear-to-t from-brand-black via-transparent to-transparent z-10 pointer-events-none" />
+          
+          <!-- Mockup Window Bar -->
+          <div class="bg-brand-dark border-b border-neutral-900 px-4 py-3 flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500/40" />
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/40" />
+            <span class="w-2.5 h-2.5 rounded-full bg-green-500/40" />
+            <span class="text-[10px] text-neutral-500 font-mono pl-4">chrome://extensions</span>
+          </div>
+
+          <!-- Mockup Screen Body -->
+          <!-- PLACEHOLDER: replace with real screenshot -->
+          <div class="aspect-video w-full flex items-center justify-center bg-brand-black p-12">
+            <div class="w-full max-w-xl border border-neutral-850 rounded-xl bg-brand-dark p-6 text-left relative overflow-hidden">
+              <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-green/5 blur-3xl rounded-full" />
+              <div class="flex items-start justify-between">
+                <div class="space-y-4">
+                  <div class="flex items-center space-x-3">
+                    <img src="/images/icon48.png" alt="DevGuard Icon" class="h-12 w-12 rounded-xl" />
+                    <div>
+                      <h4 class="font-mono text-base font-bold text-neutral-200">DevGuard</h4>
+                      <p class="text-[10px] text-neutral-500 font-mono">ID: bchpghhkgmldknidphbgnfcfjlkfomle</p>
+                    </div>
+                  </div>
+                  <p class="text-xs text-neutral-400 font-sans max-w-md leading-relaxed">
+                    Make yourself more productive. Restricts browser access until you solve the daily LeetCode challenge. Built with Declarative Net Request rules.
+                  </p>
+                  <div class="flex items-center space-x-4 pt-2">
+                    <span class="text-[10px] text-neutral-500 font-mono bg-neutral-900 border border-neutral-850 px-2 py-1 rounded">
+                      Version 1.0
+                    </span>
+                    <span class="text-[10px] text-neutral-500 font-mono bg-neutral-900 border border-neutral-850 px-2 py-1 rounded">
+                      Manifest V3
+                    </span>
+                    <span class="text-[10px] text-brand-green font-mono bg-brand-green/5 border border-brand-green/10 px-2 py-1 rounded flex items-center space-x-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse" />
+                      <span>Active</span>
+                    </span>
+                  </div>
+                </div>
+                <!-- Mockup Switch -->
+                <div class="w-11 h-6 bg-brand-green rounded-full p-0.5 cursor-pointer flex items-center justify-end">
+                  <div class="bg-black w-5 h-5 rounded-full shadow" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section id="features" class="mx-auto max-w-7xl py-20 border-t border-neutral-900 relative">
+        <div class="space-y-4 mb-16 text-center md:text-left">
+          <span class="font-mono text-xs text-brand-green tracking-wider uppercase">Engineered for Focus</span>
+          <h2 class="font-mono text-2xl font-bold tracking-tight text-neutral-100 sm:text-3xl uppercase">
+            Core Features
+          </h2>
+          <p class="font-sans text-neutral-400 text-sm max-w-xl leading-relaxed">
+            DevGuard is designed with zero bloat to strictly keep you on track. Here's the core system under the hood.
+          </p>
+        </div>
+
+        <BentoGrid>
+          <BentoGridItem
+            title="DNR Blocker Engine"
+            description="Utilizes Chrome's Declarative Net Request API to redirect main-frame browser requests. Bypassing it requires resolving the daily challenge, closing the loophole."
+            class="md:col-span-1"
+          >
+            <div slot="header" class="h-32 rounded-xl bg-linear-to-br from-brand-dark to-brand-black border border-neutral-850 flex items-center justify-center relative overflow-hidden group-hover:border-brand-green/30">
+              <Lock className="w-8 h-8 text-neutral-600 group-hover/bento:text-brand-green transition-colors" />
+              <div class="absolute inset-0 bg-brand-green/2 opacity-0 group-hover/bento:opacity-100 transition-opacity" />
+            </div>
+            <Shield slot="icon" className="w-4 h-4" />
+          </BentoGridItem>
+
+          <BentoGridItem
+            title="Automated API Verifier"
+            description="Connects query payloads with the LeetCode API to monitor your username status. The moment you achieve an 'Accepted' daily solution, permissions are automatically restored."
+            class="md:col-span-1"
+          >
+            <div slot="header" class="h-32 rounded-xl bg-linear-to-br from-brand-dark to-brand-black border border-neutral-850 flex items-center justify-center relative overflow-hidden group-hover:border-brand-green/30">
+              <Code className="w-8 h-8 text-neutral-600 group-hover/bento:text-brand-green transition-colors" />
+              <div class="absolute inset-0 bg-brand-green/2 opacity-0 group-hover/bento:opacity-100 transition-opacity" />
+            </div>
+            <Code slot="icon" className="w-4 h-4" />
+          </BentoGridItem>
+
+          <BentoGridItem
+            title="Local Session Isolation"
+            description="No servers, no web logins, and no trackers. All configuration and redirection states are saved locally in the browser storage, keeping your credentials 100% private."
+            class="md:col-span-1"
+          >
+            <div slot="header" class="h-32 rounded-xl bg-linear-to-br from-brand-dark to-brand-black border border-neutral-850 flex items-center justify-center relative overflow-hidden group-hover:border-brand-green/30">
+              <Terminal className="w-8 h-8 text-neutral-600 group-hover/bento:text-brand-green transition-colors" />
+              <div class="absolute inset-0 bg-brand-green/2 opacity-0 group-hover/bento:opacity-100 transition-opacity" />
+            </div>
+            <Terminal slot="icon" className="w-4 h-4" />
+          </BentoGridItem>
+
+          <BentoGridItem
+            title="Gamified Streak Tracker"
+            description="Features an embedded analytics layer that counts the total number of consecutive daily problems solved through the extension, helping you build habit loops."
+            class="md:col-span-3"
+          >
+            <div slot="header" class="h-32 md:h-48 rounded-xl bg-linear-to-br from-brand-dark to-brand-black border border-neutral-850 flex items-center justify-center relative overflow-hidden group-hover:border-brand-green/30">
+              <Flame className="w-8 h-8 text-neutral-600 group-hover/bento:text-brand-green transition-colors" />
+              <div class="absolute inset-0 bg-brand-green/2 opacity-0 group-hover/bento:opacity-100 transition-opacity" />
+            </div>
+            <Flame slot="icon" className="w-4 h-4" />
+          </BentoGridItem>
+        </BentoGrid>
+      </section>
+
+      <!-- How it Works Section -->
+      <section id="how-it-works" class="mx-auto max-w-7xl py-20 border-t border-neutral-900">
+        <div class="space-y-4 mb-16 text-center">
+          <h2 class="font-mono text-2xl font-bold tracking-tight text-neutral-100 sm:text-3xl uppercase">
+            How DevGuard Works
+          </h2>
+          <p class="font-sans text-neutral-400 text-sm max-w-xl mx-auto leading-relaxed">
+            Experience the block-solve-unlock cycle firsthand with this interactive web sandbox.
+          </p>
+        </div>
+
+        <InteractiveHowItWorks client:load />
+      </section>
+
+       
+
+      <!-- CTA Section -->
+      <section class="mx-auto max-w-5xl py-20 md:py-28 text-center relative border-t border-neutral-900">
+        <div class="absolute inset-0 bg-brand-green/1 blur-3xl pointer-events-none rounded-full" />
+        
+        <div class="space-y-6 max-w-xl mx-auto">
+          <h2 class="font-mono text-3xl font-extrabold tracking-tight text-neutral-100 sm:text-4xl uppercase">
+            Ready to build your consistency?
+          </h2>
+          <p class="font-sans text-neutral-400 text-sm max-w-md mx-auto leading-relaxed">
+            Download DevGuard today and hold yourself accountable. Master problem solving, one daily challenge at a time.
+          </p>
+
+          <div class="pt-4">
+            <a 
+              href="https://chromewebstore.google.com/detail/devgaurd/mljdkehdeebblhhkghiigpaahgelkeog" 
+              class="inline-flex items-center space-x-2.5 rounded-xl bg-brand-green hover:bg-brand-green-glow text-black font-mono text-base font-bold px-8 py-4 transition-all shadow-[0_0_35px_-5px_rgba(34,197,94,0.35)]"
+            >
+              <Chrome className="h-5 w-5" />
+              <span>Get DevGuard for Chrome</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-neutral-900 bg-brand-black/40 py-12 relative z-10 px-6">
+      <div class="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center space-x-2">
+          <img src="/images/icon32.png" alt="DevGuard Logo" class="h-7 w-7 rounded-lg" />
+          <span class="font-mono text-sm font-bold text-neutral-300">
+            DevGuard
+          </span>
+        </div>
+
+        <p class="font-mono text-[10px] text-neutral-500 text-center md:text-right">
+          &copy; {new Date().getFullYear()} DevGuard. Open source. Not affiliated with LeetCode.
+        </p>
+      </div>
+    </footer>
+
+  </div>
+</Layout>

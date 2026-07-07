@@ -1,0 +1,26 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  class?: string;
+}
+
+const { title, description, class: className } = Astro.props;
+---
+
+<div class={`row-span-1 rounded-2xl group/bento hover:shadow-[0_0_30px_-5px_rgba(34,197,94,0.15)] transition-all duration-300 p-6 bg-brand-dark/50 backdrop-blur-sm border border-neutral-800 hover:border-brand-green/30 justify-between flex flex-col space-y-4 ${className || ''}`}>
+  <div class="flex flex-col flex-grow">
+    <slot name="header" />
+  </div>
+  <div class="group-hover/bento:translate-x-1 transition-transform duration-200">
+    <div class="text-brand-green mb-2">
+      <slot name="icon" />
+    </div>
+    <h3 class="font-mono text-base font-semibold text-neutral-100 tracking-tight mb-2">
+      {title}
+    </h3>
+    <p class="font-sans text-sm text-neutral-400 leading-relaxed">
+      {description}
+    </p>
+  </div>
+</div>
